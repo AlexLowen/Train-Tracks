@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E585A42121753CB50019CBA3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E585A42021753CB50019CBA3 /* main.cpp */; };
+		E585A42921753CE50019CBA3 /* TrainTracks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E585A42721753CE50019CBA3 /* TrainTracks.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		E585A41D21753CB50019CBA3 /* Train Tracks */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Train Tracks"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E585A42021753CB50019CBA3 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		E585A42721753CE50019CBA3 /* TrainTracks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrainTracks.cpp; sourceTree = "<group>"; };
+		E585A42821753CE50019CBA3 /* TrainTracks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrainTracks.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				E585A42021753CB50019CBA3 /* main.cpp */,
+				E585A42721753CE50019CBA3 /* TrainTracks.cpp */,
+				E585A42821753CE50019CBA3 /* TrainTracks.h */,
 			);
 			path = "Train Tracks";
 			sourceTree = "<group>";
@@ -118,6 +123,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E585A42921753CE50019CBA3 /* TrainTracks.cpp in Sources */,
 				E585A42121753CB50019CBA3 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
