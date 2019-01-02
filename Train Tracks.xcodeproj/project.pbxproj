@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E55FC4B321D995CC00F0FF07 /* MarkedGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E55FC4B121D995CC00F0FF07 /* MarkedGraph.cpp */; };
 		E585A42121753CB50019CBA3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E585A42021753CB50019CBA3 /* main.cpp */; };
 		E585A42921753CE50019CBA3 /* TrainTracks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E585A42721753CE50019CBA3 /* TrainTracks.cpp */; };
 /* End PBXBuildFile section */
@@ -24,6 +25,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E55FC4B121D995CC00F0FF07 /* MarkedGraph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MarkedGraph.cpp; sourceTree = "<group>"; };
+		E55FC4B221D995CC00F0FF07 /* MarkedGraph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MarkedGraph.hpp; sourceTree = "<group>"; };
 		E585A41D21753CB50019CBA3 /* Train Tracks */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Train Tracks"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E585A42021753CB50019CBA3 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		E585A42721753CE50019CBA3 /* TrainTracks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrainTracks.cpp; sourceTree = "<group>"; };
@@ -61,6 +64,8 @@
 			isa = PBXGroup;
 			children = (
 				E585A42021753CB50019CBA3 /* main.cpp */,
+				E55FC4B121D995CC00F0FF07 /* MarkedGraph.cpp */,
+				E55FC4B221D995CC00F0FF07 /* MarkedGraph.hpp */,
 				E585A42721753CE50019CBA3 /* TrainTracks.cpp */,
 				E585A42821753CE50019CBA3 /* TrainTracks.h */,
 			);
@@ -125,6 +130,7 @@
 			files = (
 				E585A42921753CE50019CBA3 /* TrainTracks.cpp in Sources */,
 				E585A42121753CB50019CBA3 /* main.cpp in Sources */,
+				E55FC4B321D995CC00F0FF07 /* MarkedGraph.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,6 +244,7 @@
 				E585A42621753CB50019CBA3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

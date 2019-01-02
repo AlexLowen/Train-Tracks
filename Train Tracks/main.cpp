@@ -12,6 +12,13 @@
 #include "TrainTracks.h"
 
 int main(int argc, const char * argv[]) {
+    
+    std::vector<std::string> materials={"ab","-ac","-b-c"};
+    MarkedGraph graph_zero={&materials, 2};
+    graph_zero.DisplayMarkedGraph();
+    MarkedGraph graph_one=proper_full_fold(graph_zero,std::pair<int,int>(1,2));
+    graph_one.DisplayMarkedGraph();
+    
     //std::vector<std::string> Map={"a-c","-dcc-ac","-b-c", "c"};
     //std::vector<std::string> Map={"ae", "-dcec-ace", "-b", "ce", "ec"};
     //std::vector<std::string> Map={"b","c", "d-a", "-d-c"};
@@ -25,6 +32,12 @@ int main(int argc, const char * argv[]) {
     //TopRep TpRp(Map);
     //TpRp.DisplayGates();
     //TpRp.DisplayIllegal();
+    
+    //std::vector<std::string> Map={"a", "-dcc-ac", "-b", "c", "-c"};
+    //TopRep TpRp(Map);
+    //TpRp.DisplayGates();
+    
+    /*
     TopRep TpRp(10,30);
     //TpRp.Display();
     std::cout<<"Before we straighten: "<<std::endl;
@@ -41,6 +54,7 @@ int main(int argc, const char * argv[]) {
     St.DisplayIllegal();
     St.Find_Internal_Illegal_Turns_Crossed();
     St.DisplayInteralIllegal();
+     */
     
     //TpRp.DisplayGates();
     //TpRp.DisplayMoT();

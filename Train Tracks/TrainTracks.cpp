@@ -734,4 +734,8 @@ void TopRep::DisplayInteralIllegal() {
     return;
 }
 
+MarkedGraph TopRep::fold_turn(MarkedGraph graph, std::pair<int,int> turn) {
+    return graph;
+}
+
 

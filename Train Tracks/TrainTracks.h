@@ -14,6 +14,7 @@
 #include <vector>
 #include <set>
 #include <map>
+#include "MarkedGraph.hpp"
 
 struct Nielsen {
     std::string top;
@@ -74,6 +75,8 @@ public:
     void Find_Internal_Illegal_Turns_Crossed();
     
     void DisplayInteralIllegal();
+    
+    MarkedGraph fold_turn(MarkedGraph, std::pair<int,int>);
 };
 
 // want to do TopRep(1,
