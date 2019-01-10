@@ -57,14 +57,14 @@ public:
     std::map<size_t, size_t>* circ_len;
     void DisplayCircLen();
     
+    int IndexToInt(size_t);
+    size_t IntToIndex(int);
+    
     void fold(std::string, std::string); // needs work
     
     std::map<std::pair<int,int>, std::set<std::pair<int,int>>*>* illegal;
     void Illegal_Turns_Crossed();
     void DisplayIllegal();
-    
-    int IndexToInt(size_t);
-    size_t IntToIndex(int);
     
     TopRep straighten();
     
@@ -76,9 +76,10 @@ public:
     
     void DisplayInteralIllegal();
     
-    MarkedGraph fold_turn(MarkedGraph, std::pair<int,int>);
 };
 
-// want to do TopRep(1,
+
+std::pair<TopRep,MarkedGraph> fold_turn(TopRep, MarkedGraph, std::pair<int,int>);
+std::pair<TopRep,MarkedGraph> fold_turn(TopRep, MarkedGraph, std::string, std::string);
 
 #endif /* defined(__Train_Tracks__TrainTracks__) */

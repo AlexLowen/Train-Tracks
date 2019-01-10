@@ -13,11 +13,23 @@
 
 int main(int argc, const char * argv[]) {
     
-    std::vector<std::string> materials={"ab","-ac","-b-c"};
-    MarkedGraph graph_zero={&materials, 2};
-    graph_zero.DisplayMarkedGraph();
-    MarkedGraph graph_one=proper_full_fold(graph_zero,std::pair<int,int>(1,2));
-    graph_one.DisplayMarkedGraph();
+    std::vector<std::string> materials={"abcd-a-b-c-d"};
+    MarkedGraph graph(&materials, 4);
+    std::vector<std::string> Map={"a-c","-dcc-ac","-b-c","c"};
+    TopRep TpRp(Map);
+    std::pair<TopRep,MarkedGraph> new_TpRp=fold_turn(TpRp, graph, "-c","-a");
+    new_TpRp=fold_turn(new_TpRp.first, new_TpRp.second, "-e","-a");
+    //new_TpRp=fold_turn(new_TpRp.first, new_TpRp.second, "-a","-f");
+    //new_TpRp=fold_turn(new_TpRp.first, new_TpRp.second, "-a","-g");
+    //new_TpRp=fold_turn(new_TpRp.first, new_TpRp.second, "-a","-h");
+    //new_TpRp=fold_turn(new_TpRp.first, new_TpRp.second, "-a","-i");
+    new_TpRp.first.DisplayMap();
+    new_TpRp.second.DisplayMarkedGraph();
+    
+    //MarkedGraph graph_zero={&materials, 2};
+    //graph_zero.DisplayMarkedGraph();
+    //MarkedGraph graph_one=proper_full_fold(graph_zero,std::pair<int,int>(1,2));
+    //graph_one.DisplayMarkedGraph();
     
     //std::vector<std::string> Map={"a-c","-dcc-ac","-b-c", "c"};
     //std::vector<std::string> Map={"ae", "-dcec-ace", "-b", "ce", "ec"};

@@ -14,6 +14,14 @@
 #include <cstdlib>
 #include <ctime>
 
+std::vector<int>* reverse(std::vector<int>* vec) {
+    std::vector<int>* ret=new std::vector<int>;
+    for(size_t i=0; i<vec->size(); i++) {
+        ret->push_back(-vec->at(vec->size()-i-1));
+    }
+    return ret;
+}
+
 
 int TopRep::IndexToInt(size_t index) {
     int Int;
@@ -734,8 +742,318 @@ void TopRep::DisplayInteralIllegal() {
     return;
 }
 
-MarkedGraph TopRep::fold_turn(MarkedGraph graph, std::pair<int,int> turn) {
-    return graph;
+std::pair<TopRep, MarkedGraph> fold_turn(TopRep f, MarkedGraph graph, std::pair<int,int> turn) {
+    
+    /////////NEED TO WORK ON NEGATIVE INTS. mat is too small.
+    
+    std::vector<int> first_turn_image;
+    std::vector<int> second_turn_image;
+    
+    if(turn.first<0) first_turn_image=*reverse(&f.mat.at(f.IntToIndex(-turn.first)));
+    else first_turn_image=f.mat.at(f.IntToIndex(turn.first));
+    
+    if(turn.second<0) second_turn_image=*reverse(&f.mat.at(f.IntToIndex(-turn.second)));
+    else second_turn_image=f.mat.at(f.IntToIndex(turn.second));
+    
+    
+    std::vector<int>::iterator i=first_turn_image.begin();
+    std::vector<int>::iterator j=second_turn_image.begin();
+    if(*i!=*j) return std::pair<TopRep, MarkedGraph>{f, graph};
+    std::vector<int> new_edge;
+    size_t new_edge_size=0;
+    
+    while(i!=first_turn_image.end()) {
+        
+        //situation when the left edge is larger than the right. Need to perform a left improper full fold.
+        if(j==second_turn_image.end()) {
+            //new_edge.resize(f.mat.at(f.IntToIndex(turn.first)).size()-new_edge_size);
+            while(i!=first_turn_image.end()) {
+                new_edge.push_back(*i); i++;
+            }
+            std::vector<std::vector<int>> ret;
+            //ret.resize(f.mat.size());
+            for(size_t k=0; k<f.mat.size(); k++) {
+                std::vector<int> new_vec;
+                ret.push_back(new_vec);
+                if(k!=abs(turn.first)-1) {
+                    ret.at(k)=f.mat.at(k);
+                    for(std::vector<int>::iterator l=ret.at(k).begin(); l!=ret.at(k).end(); l++) {
+                        if(*l==turn.first) {
+                            l=ret.at(k).insert(l, turn.second);
+                            l++;
+                        }
+                        if(*l==-turn.first) {
+                            l++;
+                            l=ret.at(k).insert(l, -turn.second);
+                        }
+                    }
+                }
+                else {
+                    if(turn.first<0) ret.at(k)=*reverse(&new_edge);
+                    else ret.at(k)=new_edge;
+                    for(std::vector<int>::iterator l=ret.at(k).begin(); l!=ret.at(k).end(); l++) {
+                        if(*l==turn.first) {
+                            l=ret.at(k).insert(l, turn.second);
+                            l++;
+                        }
+                        if(*l==-turn.first) {
+                            l++;
+                            l=ret.at(k).insert(l, -turn.second);
+                        }
+                    }
+                }
+            }
+            MarkedGraph quotient_graph=left_improper_full_fold(graph, turn);
+            TopRep new_top_rep=ret;
+            new_top_rep=new_top_rep.straighten();
+            return std::pair<TopRep, MarkedGraph>{new_top_rep, quotient_graph};
+        }
+        else if(*i==*j){
+            new_edge_size++;
+            i++;
+            j++;
+        }
+        
+        //situation when a partial fold needs to occur.
+        else {
+            //new_edge.resize(new_edge_size);
+            for(std::vector<int>::iterator k=first_turn_image.begin(); k!=i; k++) {
+                new_edge.push_back(*k);
+            }
+            std::vector<std::vector<int>> ret;
+            //ret.resize(f.mat.size()+1);
+            for(size_t k=0; k<f.mat.size()+1; k++) {
+                std::vector<int> new_vec;
+                ret.push_back(new_vec);
+                if(k!=f.mat.size()&&k!=abs(turn.first)-1&&k!=abs(turn.second)-1) {
+                    ret.at(k)=f.mat.at(k);
+                    for(std::vector<int>::iterator l=ret.at(k).begin(); l!=ret.at(k).end(); l++) {
+                        if(*l==turn.first) {
+                            l=ret.at(k).insert(l, static_cast<int>(f.mat.size())+1);
+                            l++;
+                        }
+                        else if(*l==-turn.first) {
+                            l++;
+                            l=ret.at(k).insert(l, static_cast<int>(-f.mat.size())-1);
+                        }
+                        else if(*l==turn.second) {
+                            l=ret.at(k).insert(l, static_cast<int>(f.mat.size())+1);
+                            l++;
+                        }
+                        else if(*l==-turn.second) {
+                            l++;
+                            l=ret.at(k).insert(l, static_cast<int>(-f.mat.size())-1);
+                        }
+                    }
+                }
+                else if(k!=f.mat.size()&&k!=abs(turn.first)-1&&k==abs(turn.second)-1) {
+                    if(turn.second<0) {
+                        for(size_t m=0; m<second_turn_image.size()-new_edge_size; m++) {
+                            ret.at(k).push_back(f.mat.at(abs(turn.second)-1).at(m));
+                        }
+                    }
+                    else {
+                        for(size_t m = new_edge_size; m<second_turn_image.size(); m++) {
+                            ret.at(k).push_back(f.mat.at(abs(turn.second)-1).at(m));
+                        }
+                    }
+                    for(std::vector<int>::iterator l=ret.at(k).begin(); l!=ret.at(k).end(); l++) {
+                        if(*l==turn.first) {
+                            l=ret.at(k).insert(l, static_cast<int>(f.mat.size())+1);
+                            l++;
+                        }
+                        else if(*l==-turn.first) {
+                            l++;
+                            l=ret.at(k).insert(l, static_cast<int>(-f.mat.size())-1);
+                        }
+                        else if(*l==turn.second) {
+                            l=ret.at(k).insert(l, static_cast<int>(f.mat.size())+1);
+                            l++;
+                        }
+                        else if(*l==-turn.second) {
+                            l++;
+                            l=ret.at(k).insert(l, static_cast<int>(-f.mat.size())-1);
+                        }
+                    }
+                }
+                else if(k!=f.mat.size()&&k!=abs(turn.second)-1&&k==abs(turn.first)-1) {
+                    if(turn.first<0) {
+                        for(size_t m=0; m<first_turn_image.size()-new_edge_size; m++) {
+                            ret.at(k).push_back(f.mat.at(abs(turn.first)-1).at(m));
+                        }
+                    }
+                    else {
+                        for(size_t m = new_edge_size; m<first_turn_image.size(); m++) {
+                            ret.at(k).push_back(f.mat.at(abs(turn.first)-1).at(m));
+                        }
+                    }
+                    for(std::vector<int>::iterator l=ret.at(k).begin(); l!=ret.at(k).end(); l++) {
+                        if(*l==turn.first) {
+                            l=ret.at(k).insert(l, static_cast<int>(f.mat.size())+1);
+                            l++;
+                        }
+                        if(*l==-turn.first) {
+                            l++;
+                            l=ret.at(k).insert(l, static_cast<int>(-f.mat.size())-1);
+                        }
+                        if(*l==turn.second) {
+                            l=ret.at(k).insert(l, static_cast<int>(f.mat.size())+1);
+                            l++;
+                        }
+                        if(*l==-turn.second) {
+                            l++;
+                            l=ret.at(k).insert(l, static_cast<int>(-f.mat.size())-1);
+                        }
+                    }
+                }
+                else {
+                    ret.at(k)=new_edge;
+                    for(std::vector<int>::iterator l=ret.at(k).begin(); l!=ret.at(k).end(); l++) {
+                        if(*l==turn.first) {
+                            l=ret.at(k).insert(l, static_cast<int>(f.mat.size()+1));
+                            l++;
+                        }
+                        if(*l==-turn.first) {
+                            l++;
+                            l=ret.at(k).insert(l, static_cast<int>(-f.mat.size()-1));
+                        }
+                        if(*l==turn.second) {
+                            l=ret.at(k).insert(l, static_cast<int>(f.mat.size())+1);
+                            l++;
+                        }
+                        if(*l==-turn.second) {
+                            l++;
+                            l=ret.at(k).insert(l, static_cast<int>(-f.mat.size())-1);
+                        }
+                    }
+                }
+            }
+            MarkedGraph quotient_graph=partial_fold(graph, turn);
+            TopRep new_top_rep=ret;
+            new_top_rep=new_top_rep.straighten();
+            return std::pair<TopRep, MarkedGraph>{new_top_rep, quotient_graph};
+        }
+    }
+    if(i==first_turn_image.end()) {
+        
+        //situation when the right edge has the same image as the left. Need to perform a proper full fold.
+        if(j==second_turn_image.end()) {
+            bool second=false;
+            for(size_t init_vertex=0; init_vertex<graph.Graph->size(); init_vertex++) {
+                
+                if(graph.Graph->at(init_vertex).count(turn.first)) second=true;
+                //if the left is a loop, we just identify the right to the left.
+                if(graph.Graph->at(init_vertex).count(turn.first)) {
+                    if (graph.Graph->at(init_vertex).count(-turn.first)) {
+                        std::vector<std::vector<int>> ret;
+                        //ret.resize(f.mat.size()-1);
+                        for(size_t i=0; i<f.mat.size(); i++) {
+                            if(i!=abs(turn.second)-1) {
+                                ret.push_back(f.mat.at(i));
+                            }
+                        }
+                        for(size_t i=0; i<ret.size(); i++) {
+                            for(size_t j=0; j<ret.at(i).size(); j++) {
+                                if(ret.at(i).at(j)==turn.second) {
+                                    ret.at(i).at(j)=turn.first;
+                                }
+                                if(ret.at(i).at(j)==-turn.second) {
+                                    ret.at(i).at(j)=-turn.first;
+                                }
+                            }
+                        }
+                        MarkedGraph quotient_graph=proper_full_fold(graph, turn);
+                        TopRep new_top_rep=ret;
+                        new_top_rep.straighten();
+                        return std::pair<TopRep, MarkedGraph>{new_top_rep, quotient_graph};
+                    }
+                    else break;
+                }
+            }
+            //if the right is a loop, we just identify the left to the right.
+            if(second==true) {
+                std::vector<std::vector<int>> ret;
+                //ret.resize(f.mat.size()-1);
+                for(size_t i=0; i<f.mat.size(); i++) {
+                    if(i!=abs(turn.first)-1) {
+                        ret.push_back(f.mat.at(i));
+                    }
+                }
+                for(size_t i=0; i<ret.size(); i++) {
+                    for(size_t j=0; j<ret.at(i).size(); j++) {
+                        if(ret.at(i).at(j)==turn.first) {
+                            ret.at(i).at(j)=turn.second;
+                        }
+                        if(ret.at(i).at(j)==-turn.first) {
+                            ret.at(i).at(j)=-turn.second;
+                        }
+                    }
+                }
+                MarkedGraph quotient_graph=proper_full_fold(graph, turn);
+                TopRep new_top_rep=ret;
+                new_top_rep=new_top_rep.straighten();
+                return std::pair<TopRep, MarkedGraph>{new_top_rep, quotient_graph};
+            }
+        }
+        //situation when the right edge is larger than the left. Need to perform a right improper full fold.
+        else {
+            //new_edge.resize(f.mat.at(f.IntToIndex(turn.second)).size()-new_edge_size);
+            while(j!=second_turn_image.end()) {
+                new_edge.push_back(*j); j++;
+            }
+            std::vector<std::vector<int>> ret;
+            //ret.resize(f.mat.size());
+            for(size_t k=0; k<f.mat.size(); k++) {
+                std::vector<int>* temp=new std::vector<int>;
+                ret.push_back(*temp);
+                if(k!=abs(turn.second)-1) {
+                    ret.at(k)=f.mat.at(k);
+                    for(std::vector<int>::iterator l=ret.at(k).begin(); l!=ret.at(k).end(); l++) {
+                        if(*l==turn.second) {
+                            l=ret.at(k).insert(l, turn.first);
+                            l++;
+                        }
+                        if(*l==-turn.second) {
+                            l++;
+                            l=ret.at(k).insert(l, -turn.first);
+                        }
+                    }
+                }
+                else {
+                    if(turn.second<0) ret.at(k)=*reverse(&new_edge);
+                    else ret.at(k)=new_edge;
+                    for(std::vector<int>::iterator l=ret.at(k).begin(); l!=ret.at(k).end(); l++) {
+                        if(*l==turn.second) {
+                            l=ret.at(k).insert(l, turn.first);
+                            l++;
+                        }
+                        if(*l==-turn.second) {
+                            l++;
+                            l=ret.at(k).insert(l, -turn.first);
+                        }
+                    }
+                }
+            }
+            MarkedGraph quotient_graph=left_improper_full_fold(graph, turn);
+            TopRep new_top_rep=ret;
+            new_top_rep=new_top_rep.straighten();
+            return std::pair<TopRep, MarkedGraph>{new_top_rep, quotient_graph};
+        }
+    }
+    
+    return std::pair<TopRep, MarkedGraph>{f,graph};
+}
+
+std::pair<TopRep,MarkedGraph> fold_turn(TopRep f, MarkedGraph graph, std::string left, std::string right) {
+    char letter='a';
+    if(left[0]=='-') {
+        if(right[0]=='-') return fold_turn(f, graph, std::pair<int,int>{-static_cast<int>(left[1]-letter+1), -static_cast<int>(right[1]-letter+1)});
+        else return fold_turn(f, graph, std::pair<int,int>{-static_cast<int>(left[1]-letter+1), static_cast<int>(right[0]-letter+1)});
+    }
+    else {
+        if(right[0]=='-') return fold_turn(f, graph, std::pair<int,int>{static_cast<int>(left[0]-letter+1), -static_cast<int>(right[1]-letter+1)});
+        else return fold_turn(f, graph, std::pair<int,int>{static_cast<int>(left[0]-letter+1), static_cast<int>(right[0]-letter+1)});
+    }
 }
 
 
